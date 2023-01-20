@@ -28,6 +28,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         router.initialViewController()
         
+//        window?.rootViewController = UINavigationController(rootViewController: DetailMovieViewController())
         window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
     }

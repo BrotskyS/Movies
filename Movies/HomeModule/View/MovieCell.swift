@@ -82,13 +82,13 @@ class MovieCell: UITableViewCell {
     
     
     open func configure(movie: MovieItem, genres: [String]) {
-        titleView.text = movie.title + ", \n" + movie.releaseDate
+        titleView.text = movie.title + ", \n" + (movie.releaseDate ?? "")
         
         if let backdropPath = movie.backdropPath {
             backgroundImageView.sd_setImage(with: URL(string: Constant.baseMediaUrl + backdropPath))
             backgroundImageView.sd_imageTransition = .fade
         } else {
-            backgroundImageView.image = nil
+            backgroundImageView.image = UIImage(systemName: "photo.fill")
         }
        
         

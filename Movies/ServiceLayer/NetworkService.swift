@@ -16,7 +16,10 @@ struct Constant {
 }
 protocol NetworkServiceProtocol: AnyObject {
     func getGenres(completion: @escaping(Result<Genres, AFError>) -> Void)
+    
     func getMovies(page: Int, sortBy: SortMoviesEnum, completion: @escaping(Result<MoviesList, AFError>) -> Void)
+    func getSearchedMovies(page: Int, query: String, completion: @escaping(Result<MoviesList, AFError>) -> Void)
+    func getMovieDetail(movieId: Int, completion: @escaping(Result<MovieDetail, AFError>) -> Void)
 }
 
 
@@ -54,5 +57,35 @@ class NetworkService: NetworkServiceProtocol {
             }
     }
     
+    
+    func getSearchedMovies(page: Int, query: String, completion: @escaping(Result<MoviesList, AFError>) -> Void) {
+        let parameters = [
+            "api_key": "\(apiToken)",
+            "language": "en-US",
+            "page": "\(page)",
+            "query": "\(query)"
+        ]
+        
+        AF.request("\(Constant.baseAPIURL)/search/movie", parameters: parameters)
+            .validate(statusCode: 200..<300)
+            .validate(contentType: ["application/json"])
+            .responseDecodable(of: MoviesList.self) { response in
+                completion(response.result)
+            }
+    }
+    
+    func getMovieDetail(movieId: Int, completion: @escaping(Result<MovieDetail, AFError>) -> Void) {
+        let parameters = [
+            "api_key": "\(apiToken)",
+            "language": "en-US",
+        ]
+        
+        AF.request("\(Constant.baseAPIURL)/movie/\(movieId)", parameters: parameters)
+            .validate(statusCode: 200..<300)
+            .validate(contentType: ["application/json"])
+            .responseDecodable(of: MovieDetail.self) { response in
+                completion(response.result)
+            }
+    }
     
 }

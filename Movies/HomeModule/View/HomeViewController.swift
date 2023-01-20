@@ -13,23 +13,12 @@ class HomeViewController: UIViewController {
     private let tableView = UITableView()
     
     
-    private let uiMenu: UIMenu = {
-        let menu = UIMenu(title: "Hello", options: .displayInline, children: [
-            UIAction(title: "asdasd", handler: { item in
-                item.state = .on
-            }),
-            
-            UIAction(title: "1111", handler: { _ in
-                
-            })
-        ])
-        
-        return menu
-    }()
-    
     var presenter: HomePresenterProtocol!
     
     var rightBarButtonItem = UIBarButtonItem()
+    
+    let activityIndicator = UIActivityIndicatorView()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,7 +39,10 @@ class HomeViewController: UIViewController {
         rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "line.3.horizontal"), menu: createMenu())
         navigationItem.rightBarButtonItem = rightBarButtonItem
         
+        let activityIndicatorButton = UIBarButtonItem(customView: activityIndicator)
+        self.navigationItem.setLeftBarButton(activityIndicatorButton, animated: true)
         
+        activityIndicator.hidesWhenStopped = true
         searchController.searchBar.delegate = self
         
         
@@ -70,20 +62,23 @@ class HomeViewController: UIViewController {
         ])
     }
     
-    
- 
-    
-    @objc func tappedOnRightBarButtonItem() {
-        print("tappedOnRightBarButtonItem")
-    }
 }
 
 
 // MARK: HomeViewProtocol
 extension HomeViewController: HomeViewProtocol {
+    func changeLoaderStatus(isLoading: Bool) {
+        if isLoading {
+            activityIndicator.startAnimating()
+        } else {
+            activityIndicator.stopAnimating()
+        }
+    }
+    
     func updateMovies() {
         tableView.reloadData()
     }
+  
     
     func showError(message: String) {
         
@@ -94,10 +89,19 @@ extension HomeViewController: HomeViewProtocol {
 
 // MARK: UISearchBarDelegate
 extension HomeViewController: UISearchBarDelegate {
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        print("Hello")
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        print("test: \(searchText)")
+        
+        presenter.updateSearchText(searchText: searchText)
     }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        print("Cancel")
+        presenter.updateSearchText(searchText: "")
+    }
+    
 }
+
 // MARK: UITableViewDelegate, UITableViewDataSource
 extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -125,7 +129,14 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         let lastItem = presenter.moviesList.count - 1
         if indexPath.row == lastItem {
             presenter.getMovies(isPagination: true)
+            
         }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        
+        presenter.didSelectMovieMovie(at: indexPath)
     }
 }
 
@@ -135,7 +146,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
 
 extension HomeViewController {
     private func createMenu(actionTitle: String? = nil) -> UIMenu {
-        let menu = UIMenu(title: "Menu", children: [
+        let menu = UIMenu(title: "Sort by", children: [
             UIAction(title: SortMoviesEnum.popular.getValue().description) { [weak self] action in
                 self?.rightBarButtonItem.menu = self?.createMenu(actionTitle: action.title)
                 self?.presenter.changeSortingType(type: SortMoviesEnum.popular)

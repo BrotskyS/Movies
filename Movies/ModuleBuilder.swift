@@ -10,7 +10,7 @@ import UIKit
 
 protocol AssemblyBuilderProtocol: AnyObject {
     func createHomeModule(router: RouterProtocol) -> UIViewController
-    func createDetailMovie(id: String, router: RouterProtocol) -> UIViewController
+    func createDetailMovie(movieId: Int, router: RouterProtocol) -> UIViewController
 }
 
 
@@ -24,8 +24,14 @@ class AssemblyBuilder: AssemblyBuilderProtocol {
         return view
     }
     
-    func createDetailMovie(id: String, router: RouterProtocol) -> UIViewController {
-        return UIViewController()
+    func createDetailMovie(movieId: Int, router: RouterProtocol) -> UIViewController {
+        
+        let view = DetailMovieViewController()
+        let networkService = NetworkService()
+        let presenter = DetailMoviePresenter(view: view, networkService: networkService, router: router, movieId: movieId)
+        view.presenter = presenter
+        
+        return view
     }
     
     

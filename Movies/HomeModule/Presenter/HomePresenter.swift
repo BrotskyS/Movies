@@ -10,6 +10,8 @@ import Foundation
 protocol HomeViewProtocol: AnyObject {
     func updateMovies()
     func showError(message: String)
+    
+    func changeLoaderStatus(isLoading: Bool)
 }
 
 protocol HomePresenterProtocol: AnyObject {
@@ -19,15 +21,22 @@ protocol HomePresenterProtocol: AnyObject {
     var moviesList: [MovieItem] {get set}
     var genres: Genres? {get set}
     var sortType: SortMoviesEnum {get set}
+    var searchText: String {get set}
     
+    // genres
     func getGenres()
     func getGenresForMovie(indexPath: IndexPath) -> [String]
     
+    // movies
     func getMovies(isPagination: Bool)
     
+    // sort
     func changeSortingType(type: SortMoviesEnum)
     
-    func tabOnMovie()
+    // search
+    func updateSearchText(searchText: String)
+    
+    func didSelectMovieMovie(at indexPath: IndexPath)
     
 }
 
@@ -45,6 +54,7 @@ class HomePresenter: HomePresenterProtocol {
     var moviesList: [MovieItem] = []
     var genres: Genres?
     var sortType: SortMoviesEnum = .popular
+    var searchText: String = ""
     
     
     required init(view: HomeViewProtocol, networkService: NetworkServiceProtocol, router: RouterProtocol) {
@@ -55,7 +65,11 @@ class HomePresenter: HomePresenterProtocol {
     
     // MARK: Genres
     func getGenres() {
+        view?.changeLoaderStatus(isLoading: true)
+        
         networkService.getGenres { [weak self] result in
+            self?.view?.changeLoaderStatus(isLoading: false)
+            
             switch result {
                 case .success(let genres):
                     self?.genres = genres
@@ -75,7 +89,7 @@ class HomePresenter: HomePresenterProtocol {
         let filteredGenres =  genres.genres.filter { genre in
             movieItem.genreIDS.contains(where: {$0 == genre.id})
         }
-
+        
         
         return filteredGenres.compactMap { genre in
             return genre.name
@@ -84,23 +98,59 @@ class HomePresenter: HomePresenterProtocol {
     
     // MARK: Movies
     func getMovies(isPagination: Bool) {
+        
+        view?.changeLoaderStatus(isLoading: true)
+        
         let currentPage = currentMovies?.page ?? 0
         let totalPages = currentMovies?.totalPages ?? 0
         // Handle when currentPage bigger then totalPages. It's hard to load 36742 pages, but still))
         let paginationPage = currentPage == totalPages ? currentPage : currentPage + 1
         let page = isPagination ? paginationPage : 1
         
-        networkService.getMovies(page: page, sortBy: sortType) { [weak self] result in
-            switch result {
-                case .success(let movies):
-                    print("movies: \(movies)")
-                    self?.currentMovies = movies
-                    self?.moviesList += movies.results
-                    self?.view?.updateMovies()
-                case .failure(let error):
-                    self?.view?.showError(message: error.localizedDescription)
+        // Check if it's search request
+        
+        if searchText.isEmpty {
+            networkService.getMovies(page: page, sortBy: sortType) { [weak self] result in
+                self?.view?.changeLoaderStatus(isLoading: false)
+                switch result {
+                    case .success(let movies):
+                        self?.currentMovies = movies
+                        
+                        if movies.page == 1 {
+                            self?.moviesList = movies.results
+                        } else {
+                            self?.moviesList += movies.results
+                        }
+                        
+                        self?.view?.updateMovies()
+                        
+                    case .failure(let error):
+                        print("DEBUG: networkService.getMovies error: \(error)")
+                        self?.view?.showError(message: error.localizedDescription)
+                }
+            }
+        } else  {
+            networkService.getSearchedMovies(page: page, query: searchText) { [weak self] result in
+                self?.view?.changeLoaderStatus(isLoading: false)
+                
+                switch result {
+                    case .success(let movies):
+                        self?.currentMovies = movies
+                        
+                        if movies.page == 1 {
+                            self?.moviesList = movies.results
+                        } else {
+                            self?.moviesList += movies.results
+                        }
+                        
+                        self?.view?.updateMovies()
+                    case .failure(let error):
+                        print("DEBUG: networkService.getSearchedMovies error: \(error)")
+                        self?.view?.showError(message: error.localizedDescription)
+                }
             }
         }
+        
     }
     
     // MARK: Change sort type
@@ -108,18 +158,26 @@ class HomePresenter: HomePresenterProtocol {
     func changeSortingType(type: SortMoviesEnum) {
         sortType = type
         
-        currentMovies = nil
-        moviesList = []
-        
-        
+        getMovies(isPagination: false)
+    }
+    
+    func updateSearchText(searchText: String) {
+        self.searchText = searchText
         
         getMovies(isPagination: false)
     }
     
-    func tabOnMovie() {
+    func didSelectMovieMovie(at indexPath: IndexPath) {
+        let movieId = moviesList[indexPath.row].id
         
+        router?.showDetailMovie(movieId: movieId)
     }
     
+    
+    private func clearMovies() {
+        currentMovies = nil
+        moviesList = []
+    }
 }
 
 
