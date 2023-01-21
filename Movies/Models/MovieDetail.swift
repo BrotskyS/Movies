@@ -34,6 +34,7 @@ struct MovieDetail: Decodable {
     let video: Bool
     let voteAverage: Double
     let voteCount: Int
+    let videos: Videos
 
     enum CodingKeys: String, CodingKey {
         case adult
@@ -52,6 +53,7 @@ struct MovieDetail: Decodable {
         case status, tagline, title, video
         case voteAverage = "vote_average"
         case voteCount = "vote_count"
+        case videos
     }
 }
 
@@ -89,4 +91,42 @@ struct SpokenLanguage: Codable {
         case iso639_1 = "iso_639_1"
         case name
     }
+}
+
+
+struct MovieDetaile: Decodable {
+    
+}
+
+
+
+
+struct Videos: Codable {
+    let results: [VideosResult]
+}
+
+// MARK: - Result
+struct VideosResult: Codable {
+    let name, key: String
+    let site: String
+    let size: Int
+    let type: String
+    let official: Bool
+    let publishedAt, id: String
+
+    enum CodingKeys: String, CodingKey {
+        case name, key, site, size, type, official
+        case publishedAt = "published_at"
+        case id
+    }
+}
+
+enum Site: String, Codable {
+    case youTube = "YouTube"
+    
+}
+enum VideosType: String, Codable {
+    
+    case featurette = "Featurette"
+    case trailer = "Trailer"
 }

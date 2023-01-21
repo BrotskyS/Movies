@@ -19,6 +19,7 @@ protocol RouterProtocol: RouterMain {
     func initialViewController()
     func showDetailMovie(movieId: Int)
     func popToRoot()
+    func openImageViewer(image: UIImage?)
 }
 
 
@@ -52,7 +53,12 @@ class Router: RouterProtocol {
         }
     }
     
-    
+    func openImageViewer(image: UIImage?){
+        if let navigationController = navigationController {
+            guard let ImageViewerController = assemblyBuilder?.createImageViewer(image: image, router: self) else {return}
+            navigationController.present(ImageViewerController, animated: true)
+        }
+    }
     
     
 }

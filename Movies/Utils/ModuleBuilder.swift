@@ -11,6 +11,7 @@ import UIKit
 protocol AssemblyBuilderProtocol: AnyObject {
     func createHomeModule(router: RouterProtocol) -> UIViewController
     func createDetailMovie(movieId: Int, router: RouterProtocol) -> UIViewController
+    func createImageViewer(image: UIImage?, router: RouterProtocol) -> UIViewController
 }
 
 
@@ -34,5 +35,12 @@ class AssemblyBuilder: AssemblyBuilderProtocol {
         return view
     }
     
+    func createImageViewer(image: UIImage?, router: RouterProtocol) -> UIViewController {
+        let view = ImageViewerViewController()
+        let presenter = ImageViewerPresenter(view: view, router: router, image: image)
+        view.presenter = presenter
+        
+        return view
+    }
     
 }

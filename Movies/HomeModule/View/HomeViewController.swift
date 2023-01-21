@@ -33,7 +33,7 @@ class HomeViewController: UIViewController {
     }
     
     private func setupNavigationItem() {
-        navigationItem.title = "Popular Movies"
+        navigationItem.title = "Popular Movies".localised()
         navigationItem.searchController = searchController
         
         rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "line.3.horizontal"), menu: createMenu())

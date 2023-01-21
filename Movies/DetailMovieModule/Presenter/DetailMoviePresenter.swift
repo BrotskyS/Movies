@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 protocol DetailMovieViewProtocol: AnyObject {
     func updateMovie(movie: MovieDetail)
@@ -19,9 +20,11 @@ protocol DetailMoviePresenterProtocol: AnyObject {
     
     
     var movie: MovieDetail? {get set}
+    var trailerYTKey: String? {get set}
     
     func getMovie()
     
+    func openPhoto(image: UIImage?)
 }
 
 
@@ -33,6 +36,7 @@ class DetailMoviePresenter: DetailMoviePresenterProtocol {
     let movieId: Int
     
     var movie: MovieDetail?
+    var trailerYTKey: String?
     
     required init(view: DetailMovieViewProtocol, networkService: NetworkServiceProtocol, router: RouterProtocol, movieId: Int) {
         self.view = view
@@ -42,16 +46,35 @@ class DetailMoviePresenter: DetailMoviePresenterProtocol {
     }
     
     func getMovie() {
+        view?.changeLoaderStatus(isLoading: true)
         networkService.getMovieDetail(movieId: movieId) { [weak self] result in
+            self?.view?.changeLoaderStatus(isLoading: false)
             switch result {
                 case .success(let movie):
                     self?.movie = movie
+                    self?.setTrailerYTKey()
                     self?.view?.updateMovie(movie: movie)
                 case.failure(let error):
                     self?.view?.showError(message: error.localizedDescription)
                     print("DEBUG: networkService.getMovieDetail error: \(error)")
             }
         }
+    }
+    
+    
+    
+    func openPhoto(image: UIImage?) {
+        router?.openImageViewer(image: image)
+    }
+    
+    private func setTrailerYTKey() {
+        let videos = movie?.videos.results.filter({ video in
+            video.site == "YouTube" && video.type == "Trailer"
+        })
+        
+        let firstVideo = videos?.first
+        
+        trailerYTKey = firstVideo?.key
     }
     
 }

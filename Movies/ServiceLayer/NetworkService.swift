@@ -78,6 +78,7 @@ class NetworkService: NetworkServiceProtocol {
         let parameters = [
             "api_key": "\(apiToken)",
             "language": "en-US",
+            "append_to_response": "videos"
         ]
         
         AF.request("\(Constant.baseAPIURL)/movie/\(movieId)", parameters: parameters)

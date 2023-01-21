@@ -8,13 +8,25 @@
 import UIKit
 import SDWebImage
 
+
 class DetailMovieViewController: UIViewController {
+    
+    
+    private let activityIndicator: UIActivityIndicatorView = {
+       let activityIndicator = UIActivityIndicatorView()
+        activityIndicator.hidesWhenStopped = true
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        
+        return activityIndicator
+    }()
     
     
     private let  scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.alwaysBounceVertical = true
+        
+        
         return scrollView
     }()
     
@@ -32,7 +44,6 @@ class DetailMovieViewController: UIViewController {
         let image = UIImageView()
         image.image = UIImage(named: "TestImage1")
         image.contentMode = .scaleAspectFill
-        image.backgroundColor = .red
         image.translatesAutoresizingMaskIntoConstraints = false
         
         
@@ -49,7 +60,7 @@ class DetailMovieViewController: UIViewController {
     
     private let countryYearLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 20, weight: .bold)
+        label.font = .systemFont(ofSize: 17, weight: .bold)
         label.textColor = .label
         
         return label
@@ -58,7 +69,7 @@ class DetailMovieViewController: UIViewController {
     private let genresLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 2
-        label.font = .systemFont(ofSize: 20, weight: .bold)
+        label.font = .systemFont(ofSize: 16, weight: .regular)
         label.textColor = .label
         
         return label
@@ -69,8 +80,6 @@ class DetailMovieViewController: UIViewController {
         let stackView = UIStackView()
         stackView.axis = .horizontal
         stackView.distribution = .equalSpacing
-        
-        stackView.translatesAutoresizingMaskIntoConstraints = false
         
         return stackView
     }()
@@ -106,15 +115,15 @@ class DetailMovieViewController: UIViewController {
     
     var presenter: DetailMoviePresenter!
     
+  
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         
-        navigationItem.title = "Title"
-        
         view.addSubview(scrollView)
+        view.addSubview(activityIndicator)
         scrollView.addSubview(stackView)
         
         stackView.addArrangedSubview(imageView)
@@ -124,6 +133,7 @@ class DetailMovieViewController: UIViewController {
         
         stackView.addArrangedSubview(ratingStackView)
         ratingStackView.addArrangedSubview(trailerImageButton)
+        trailerImageButton.addTarget(self, action: #selector(pressOnTrailer), for: .touchUpInside)
         ratingStackView.addArrangedSubview(ratingLabel)
         
         
@@ -134,8 +144,27 @@ class DetailMovieViewController: UIViewController {
         
         presenter.getMovie()
         
+        // set gesture on imageView
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(imageTapped(tapGestureRecognizer:)))
+           imageView.isUserInteractionEnabled = true
+           imageView.addGestureRecognizer(tapGestureRecognizer)
+        
     }
     
+    @objc func imageTapped(tapGestureRecognizer: UITapGestureRecognizer){
+        let tappedImage = tapGestureRecognizer.view as! UIImageView
+
+        presenter.openPhoto(image: tappedImage.image)
+    }
+    
+    @objc func pressOnTrailer() {
+        guard let trailerYTKey = presenter.trailerYTKey else {return}
+        let urlString = "https://www.youtube.com/watch?v=\(trailerYTKey)"
+
+        if let url = URL(string: urlString), UIApplication.shared.canOpenURL(url) {
+            UIApplication.shared.open(url)
+        }
+    }
     
     
     private func setupConstraints() {
@@ -152,6 +181,9 @@ class DetailMovieViewController: UIViewController {
             
             imageView.heightAnchor.constraint(equalToConstant: 300),
             imageView.widthAnchor.constraint(equalTo: stackView.widthAnchor),
+            
+            activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
             
         ])
     }
@@ -182,6 +214,8 @@ extension DetailMovieViewController: DetailMovieViewProtocol {
         ratingLabel.text = "Genres: \(movie.voteAverage)"
         
         descriptionTextView.text = movie.overview
+        
+        trailerImageButton.isHidden = presenter.trailerYTKey == nil
     }
     
     func showError(message: String) {
@@ -189,7 +223,13 @@ extension DetailMovieViewController: DetailMovieViewProtocol {
     }
     
     func changeLoaderStatus(isLoading: Bool) {
-        
+        if isLoading {
+            activityIndicator.startAnimating()
+            scrollView.isHidden = true
+        } else {
+            activityIndicator.stopAnimating()
+            scrollView.isHidden = false
+        }
     }
     
     

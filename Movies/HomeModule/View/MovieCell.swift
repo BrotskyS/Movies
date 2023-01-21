@@ -17,7 +17,13 @@ class MovieCell: UITableViewCell {
     private let view: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.clipsToBounds = true
+        view.layer.cornerRadius = 10
+        
+        view.layer.shadowColor = UIColor.black.cgColor
+        view.layer.shadowRadius = 10
+        view.layer.shadowOpacity = 0.3
+        view.layer.shadowOffset = CGSize(width: 0, height: 0)
+        view.layer.masksToBounds = false
         
         return view
     }()
@@ -26,7 +32,8 @@ class MovieCell: UITableViewCell {
         let image = UIImageView()
         image.translatesAutoresizingMaskIntoConstraints = false
         image.contentMode = .scaleAspectFill
-        
+        image.clipsToBounds = true
+        image.layer.cornerRadius = 10
         
         return image
     }()
