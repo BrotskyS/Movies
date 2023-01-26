@@ -5,10 +5,7 @@
 //  Created by Sergiy Brotsky on 19.01.2023.
 //
 
-
 import Foundation
-
-
 
 struct SortMovies {
     let name: String
@@ -21,10 +18,10 @@ enum SortMoviesEnum {
     
     func getValue() -> SortMovies {
         switch self {
-            case .popular:
-                return SortMovies(name: "popularity.desc", description: "Popular")
-            case .unpopular:
-                return SortMovies(name: "popularity.asc", description: "Unpopular")
+        case .popular:
+            return SortMovies(name: "popularity.desc", description: "Popular")
+        case .unpopular:
+            return SortMovies(name: "popularity.asc", description: "Unpopular")
         }
     }
 }
@@ -72,4 +69,3 @@ struct MovieItem: Codable {
         case voteCount = "vote_count"
     }
 }
-

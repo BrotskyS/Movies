@@ -13,7 +13,6 @@ class MovieCell: UITableViewCell {
     
     static let identifier = "movieCell"
     
-    
     private let view: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -53,7 +52,6 @@ class MovieCell: UITableViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .systemFont(ofSize: 18, weight: .bold)
   
-        
         label.setShadow()
         
         return label
@@ -79,14 +77,12 @@ class MovieCell: UITableViewCell {
         view.addSubview(ratingLabel)
         view.addSubview(genresLabel)
         
-        
         setupConstraints()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
     
     open func configure(movie: MovieItem, genres: [String]) {
         titleView.text = movie.title + ", \n" + (movie.releaseDate ?? "")
@@ -98,7 +94,6 @@ class MovieCell: UITableViewCell {
             backgroundImageView.image = UIImage(systemName: "photo.fill")
         }
        
-        
         ratingLabel.text = "Rating: \(movie.voteAverage)"
         
         genresLabel.text = genres.joined(separator: "\n")
@@ -114,7 +109,6 @@ class MovieCell: UITableViewCell {
             view.centerYAnchor.constraint(equalTo: centerYAnchor),
             view.centerXAnchor.constraint(equalTo: centerXAnchor),
             
-            
             // Title
             titleView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             titleView.topAnchor.constraint(equalTo: view.topAnchor, constant: 20),
@@ -128,14 +122,10 @@ class MovieCell: UITableViewCell {
             ratingLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20),
             ratingLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             
-            //genresLabel
-            
+            // genresLabel
             genresLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20),
-            genresLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            genresLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20)
         ])
     }
     
 }
-
-
-

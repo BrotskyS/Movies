@@ -8,12 +8,10 @@
 import Foundation
 import UIKit
 
-
 protocol RouterMain: AnyObject {
     var navigationController: UINavigationController? {get set}
     var assemblyBuilder: AssemblyBuilderProtocol? {get set}
 }
-
 
 protocol RouterProtocol: RouterMain {
     func initialViewController()
@@ -21,7 +19,6 @@ protocol RouterProtocol: RouterMain {
     func popToRoot()
     func openImageViewer(image: UIImage?)
 }
-
 
 class Router: RouterProtocol {
     
@@ -42,8 +39,8 @@ class Router: RouterProtocol {
     
     func showDetailMovie(movieId: Int) {
         if let navigationController = navigationController {
-            guard let DetailMovieViewController = assemblyBuilder?.createDetailMovie(movieId: movieId, router: self) else {return}
-            navigationController.pushViewController(DetailMovieViewController, animated: true)
+            guard let detailMovieViewController = assemblyBuilder?.createDetailMovie(movieId: movieId, router: self) else {return}
+            navigationController.pushViewController(detailMovieViewController, animated: true)
         }
     }
     
@@ -53,12 +50,11 @@ class Router: RouterProtocol {
         }
     }
     
-    func openImageViewer(image: UIImage?){
+    func openImageViewer(image: UIImage?) {
         if let navigationController = navigationController {
-            guard let ImageViewerController = assemblyBuilder?.createImageViewer(image: image, router: self) else {return}
-            navigationController.present(ImageViewerController, animated: true)
+            guard let imageViewerController = assemblyBuilder?.createImageViewer(image: image, router: self) else {return}
+            navigationController.present(imageViewerController, animated: true)
         }
     }
-    
-    
+
 }

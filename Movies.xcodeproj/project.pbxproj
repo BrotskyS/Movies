@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		0D910C9929783C76008D4237 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D910C9829783C76008D4237 /* AppDelegate.swift */; };
 		0D910C9B29783C76008D4237 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D910C9A29783C76008D4237 /* SceneDelegate.swift */; };
-		0D910C9D29783C76008D4237 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D910C9C29783C76008D4237 /* ViewController.swift */; };
 		0D910CA229783C77008D4237 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0D910CA129783C77008D4237 /* Assets.xcassets */; };
 		0D910CA529783C77008D4237 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0D910CA329783C77008D4237 /* LaunchScreen.storyboard */; };
 		0D910CB029789BEC008D4237 /* HomePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D910CAF29789BEC008D4237 /* HomePresenter.swift */; };
@@ -36,7 +35,6 @@
 		0D910C9529783C76008D4237 /* Movies.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Movies.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0D910C9829783C76008D4237 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0D910C9A29783C76008D4237 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		0D910C9C29783C76008D4237 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		0D910CA129783C77008D4237 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0D910CA429783C77008D4237 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0D910CA629783C77008D4237 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -99,7 +97,6 @@
 				0D910CBC29795CAE008D4237 /* Models */,
 				0D910CB129789CED008D4237 /* ServiceLayer */,
 				0D910CE5297C4E8E008D4237 /* Utils */,
-				0D910C9C29783C76008D4237 /* ViewController.swift */,
 				0D910CA129783C77008D4237 /* Assets.xcassets */,
 				0D910CA329783C77008D4237 /* LaunchScreen.storyboard */,
 				0D910CA629783C77008D4237 /* Info.plist */,
@@ -247,6 +244,7 @@
 				0D910C9129783C76008D4237 /* Sources */,
 				0D910C9229783C76008D4237 /* Frameworks */,
 				0D910C9329783C76008D4237 /* Resources */,
+				0DC1A0612982887700782136 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -312,6 +310,26 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		0DC1A0612982887700782136 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export PATH=\"$PATH:/opt/homebrew/bin\"\nif which swiftlint > /dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		0D910C9129783C76008D4237 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -320,7 +338,6 @@
 				0D910CBE29795CDA008D4237 /* Genres.swift in Sources */,
 				0D910CB329789D1B008D4237 /* NetworkService.swift in Sources */,
 				0D910CD2297AD199008D4237 /* DetailMovieViewController.swift in Sources */,
-				0D910C9D29783C76008D4237 /* ViewController.swift in Sources */,
 				0D910CC52979C272008D4237 /* MovieCell.swift in Sources */,
 				0D910C9929783C76008D4237 /* AppDelegate.swift in Sources */,
 				0D910CBB29789FA9008D4237 /* ModuleBuilder.swift in Sources */,

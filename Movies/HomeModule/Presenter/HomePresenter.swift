@@ -40,22 +40,17 @@ protocol HomePresenterProtocol: AnyObject {
     
 }
 
-
-
-
 class HomePresenter: HomePresenterProtocol {
     
     weak var view: HomeViewProtocol?
     var router: RouterProtocol?
     let networkService: NetworkServiceProtocol!
     
-    
     var currentMovies: MoviesList?
     var moviesList: [MovieItem] = []
     var genres: Genres?
     var sortType: SortMoviesEnum = .popular
     var searchText: String = ""
-    
     
     required init(view: HomeViewProtocol, networkService: NetworkServiceProtocol, router: RouterProtocol) {
         self.view = view
@@ -71,9 +66,9 @@ class HomePresenter: HomePresenterProtocol {
             self?.view?.changeLoaderStatus(isLoading: false)
             
             switch result {
-                case .success(let genres):
-                    self?.genres = genres
-                case .failure:
+            case .success(let genres):
+                self?.genres = genres
+            case .failure:
                     break
             }
         }
@@ -85,11 +80,9 @@ class HomePresenter: HomePresenterProtocol {
         
         let movieItem = moviesList[indexPath.row]
         
-        
         let filteredGenres =  genres.genres.filter { genre in
             movieItem.genreIDS.contains(where: {$0 == genre.id})
         }
-        
         
         return filteredGenres.compactMap { genre in
             return genre.name
@@ -113,40 +106,40 @@ class HomePresenter: HomePresenterProtocol {
             networkService.getMovies(page: page, sortBy: sortType) { [weak self] result in
                 self?.view?.changeLoaderStatus(isLoading: false)
                 switch result {
-                    case .success(let movies):
-                        self?.currentMovies = movies
-                        
-                        if movies.page == 1 {
-                            self?.moviesList = movies.results
-                        } else {
-                            self?.moviesList += movies.results
-                        }
-                        
-                        self?.view?.updateMovies()
-                        
-                    case .failure(let error):
-                        print("DEBUG: networkService.getMovies error: \(error)")
-                        self?.view?.showError(message: error.localizedDescription)
+                case .success(let movies):
+                    self?.currentMovies = movies
+                    
+                    if movies.page == 1 {
+                        self?.moviesList = movies.results
+                    } else {
+                        self?.moviesList += movies.results
+                    }
+                    
+                    self?.view?.updateMovies()
+                    
+                case .failure(let error):
+                    print("DEBUG: networkService.getMovies error: \(error)")
+                    self?.view?.showError(message: error.localizedDescription)
                 }
             }
-        } else  {
+        } else {
             networkService.getSearchedMovies(page: page, query: searchText) { [weak self] result in
                 self?.view?.changeLoaderStatus(isLoading: false)
                 
                 switch result {
-                    case .success(let movies):
-                        self?.currentMovies = movies
-                        
-                        if movies.page == 1 {
-                            self?.moviesList = movies.results
-                        } else {
-                            self?.moviesList += movies.results
-                        }
-                        
-                        self?.view?.updateMovies()
-                    case .failure(let error):
-                        print("DEBUG: networkService.getSearchedMovies error: \(error)")
-                        self?.view?.showError(message: error.localizedDescription)
+                case .success(let movies):
+                    self?.currentMovies = movies
+                    
+                    if movies.page == 1 {
+                        self?.moviesList = movies.results
+                    } else {
+                        self?.moviesList += movies.results
+                    }
+                    
+                    self?.view?.updateMovies()
+                case .failure(let error):
+                    print("DEBUG: networkService.getSearchedMovies error: \(error)")
+                    self?.view?.showError(message: error.localizedDescription)
                 }
             }
         }
@@ -173,11 +166,8 @@ class HomePresenter: HomePresenterProtocol {
         router?.showDetailMovie(movieId: movieId)
     }
     
-    
     private func clearMovies() {
         currentMovies = nil
         moviesList = []
     }
 }
-
-

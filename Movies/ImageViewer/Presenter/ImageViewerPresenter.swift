@@ -18,7 +18,6 @@ protocol ImageViewerPresenterProtocol: AnyObject {
     var image: UIImage? {get set}
 }
 
-
 class ImageViewerPresenter: ImageViewerPresenterProtocol {
     
     weak var view: ImageViewerViewProtocol?
@@ -31,6 +30,5 @@ class ImageViewerPresenter: ImageViewerPresenterProtocol {
         self.router = router
         self.image = image
     }
-    
     
 }

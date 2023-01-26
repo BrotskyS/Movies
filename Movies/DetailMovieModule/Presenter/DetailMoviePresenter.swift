@@ -18,7 +18,6 @@ protocol DetailMovieViewProtocol: AnyObject {
 protocol DetailMoviePresenterProtocol: AnyObject {
     init(view: DetailMovieViewProtocol, networkService: NetworkServiceProtocol, router: RouterProtocol, movieId: Int)
     
-    
     var movie: MovieDetail? {get set}
     var trailerYTKey: String? {get set}
     
@@ -26,7 +25,6 @@ protocol DetailMoviePresenterProtocol: AnyObject {
     
     func openPhoto(image: UIImage?)
 }
-
 
 class DetailMoviePresenter: DetailMoviePresenterProtocol {
     
@@ -50,19 +48,17 @@ class DetailMoviePresenter: DetailMoviePresenterProtocol {
         networkService.getMovieDetail(movieId: movieId) { [weak self] result in
             self?.view?.changeLoaderStatus(isLoading: false)
             switch result {
-                case .success(let movie):
+            case .success(let movie):
                     self?.movie = movie
                     self?.setTrailerYTKey()
                     self?.view?.updateMovie(movie: movie)
-                case.failure(let error):
+            case.failure(let error):
                     self?.view?.showError(message: error.localizedDescription)
                     print("DEBUG: networkService.getMovieDetail error: \(error)")
             }
         }
     }
-    
-    
-    
+     
     func openPhoto(image: UIImage?) {
         router?.openImageViewer(image: image)
     }

@@ -7,11 +7,8 @@
 
 import UIKit
 
-
-
 class ImageViewerViewController: UIViewController {
-
-    
+ 
     private let scrollViewImage: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
@@ -28,12 +25,10 @@ class ImageViewerViewController: UIViewController {
         image.image = UIImage(named: "TestImage1")
         image.contentMode = .scaleAspectFit
         
-        
         return image
     }()
     
     var presenter: ImageViewerPresenterProtocol!
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,16 +38,10 @@ class ImageViewerViewController: UIViewController {
         scrollViewImage.addSubview(imageView)
         scrollViewImage.delegate = self
     
-        
         setupConstraints()
-        
-//        navigationItem.rightBarButtonItem = UIBarButtonItem(tit
         
         imageView.image = presenter.image
     }
-    
-    
-    
     
     func setupConstraints() {
         NSLayoutConstraint.activate([
@@ -64,9 +53,7 @@ class ImageViewerViewController: UIViewController {
         ])
     }
     
-
 }
-
 
 extension ImageViewerViewController: UIScrollViewDelegate {
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
@@ -74,11 +61,9 @@ extension ImageViewerViewController: UIScrollViewDelegate {
     }
 }
 
-
 extension ImageViewerViewController: ImageViewerViewProtocol {
     func updateImage(image: UIImage) {
         imageView.image = image
     }
-    
     
 }

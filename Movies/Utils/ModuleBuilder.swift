@@ -14,7 +14,6 @@ protocol AssemblyBuilderProtocol: AnyObject {
     func createImageViewer(image: UIImage?, router: RouterProtocol) -> UIViewController
 }
 
-
 class AssemblyBuilder: AssemblyBuilderProtocol {
     func createHomeModule(router: RouterProtocol) -> UIViewController {
         let view = HomeViewController()

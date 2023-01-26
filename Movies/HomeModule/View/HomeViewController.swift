@@ -12,13 +12,11 @@ class HomeViewController: UIViewController {
     private let searchController = UISearchController(searchResultsController: nil)
     private let tableView = UITableView()
     
-    
     var presenter: HomePresenterProtocol!
     
     var rightBarButtonItem = UIBarButtonItem()
     
     let activityIndicator = UIActivityIndicatorView()
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,9 +25,9 @@ class HomeViewController: UIViewController {
         setupNavigationItem()
         setupTableView()
         
-     
         presenter.getGenres()
         presenter.getMovies(isPagination: false)
+        
     }
     
     private func setupNavigationItem() {
@@ -45,7 +43,6 @@ class HomeViewController: UIViewController {
         activityIndicator.hidesWhenStopped = true
         searchController.searchBar.delegate = self
         
-        
     }
     
     private func setupTableView() {
@@ -55,7 +52,6 @@ class HomeViewController: UIViewController {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.register(MovieCell.self, forCellReuseIdentifier: MovieCell.identifier)
         
-        
         NSLayoutConstraint.activate([
             tableView.widthAnchor.constraint(equalTo: view.widthAnchor),
             tableView.heightAnchor.constraint(equalTo: view.heightAnchor)
@@ -63,7 +59,6 @@ class HomeViewController: UIViewController {
     }
     
 }
-
 
 // MARK: HomeViewProtocol
 extension HomeViewController: HomeViewProtocol {
@@ -79,13 +74,11 @@ extension HomeViewController: HomeViewProtocol {
         tableView.reloadData()
     }
   
-    
     func showError(message: String) {
         
     }
     
 }
-
 
 // MARK: UISearchBarDelegate
 extension HomeViewController: UISearchBarDelegate {
@@ -110,15 +103,14 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     
     // render cell
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: MovieCell.identifier, for: indexPath) as! MovieCell
+       guard let cell = tableView.dequeueReusableCell(withIdentifier: MovieCell.identifier, for: indexPath) as? MovieCell else {
+            return UITableViewCell()
+        }
         
-        
-         
         let movieItem =  presenter.moviesList[indexPath.row]
         
         let genres = presenter.getGenresForMovie(indexPath: indexPath)
     
-        
         cell.configure(movie: movieItem, genres: genres)
         
         return cell
@@ -137,13 +129,11 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         tableView.deselectRow(at: indexPath, animated: true)
         
         presenter.didSelectMovieMovie(at: indexPath)
+        
     }
 }
 
-
-
 // MARK: UIMenu
-
 extension HomeViewController {
     private func createMenu(actionTitle: String? = nil) -> UIMenu {
         let menu = UIMenu(title: "Sort by", children: [
@@ -154,7 +144,7 @@ extension HomeViewController {
             UIAction(title: SortMoviesEnum.unpopular.getValue().description) { [weak self] action in
                 self?.rightBarButtonItem.menu = self?.createMenu(actionTitle: action.title)
                 self?.presenter.changeSortingType(type: SortMoviesEnum.unpopular)
-            },
+            }
      
         ])
         

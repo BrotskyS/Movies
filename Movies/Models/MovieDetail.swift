@@ -7,8 +7,6 @@
 
 import Foundation
 
-
-
 // MARK: - Welcome
 struct MovieDetail: Decodable {
     let adult: Bool
@@ -57,7 +55,6 @@ struct MovieDetail: Decodable {
     }
 }
 
-
 // MARK: - ProductionCompany
 struct ProductionCompany: Codable {
     let id: Int
@@ -74,32 +71,26 @@ struct ProductionCompany: Codable {
 
 // MARK: - ProductionCountry
 struct ProductionCountry: Codable {
-    let iso3166_1, name: String
+    let name: String
 
     enum CodingKeys: String, CodingKey {
-        case iso3166_1 = "iso_3166_1"
         case name
     }
 }
 
 // MARK: - SpokenLanguage
 struct SpokenLanguage: Codable {
-    let englishName, iso639_1, name: String
+    let englishName, name: String
 
     enum CodingKeys: String, CodingKey {
         case englishName = "english_name"
-        case iso639_1 = "iso_639_1"
         case name
     }
 }
 
-
 struct MovieDetaile: Decodable {
     
 }
-
-
-
 
 struct Videos: Codable {
     let results: [VideosResult]

@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension String  {
+extension String {
     func localised() -> String {
         NSLocalizedString(
             self,

@@ -8,10 +8,8 @@
 import UIKit
 import SDWebImage
 
-
 class DetailMovieViewController: UIViewController {
-    
-    
+
     private let activityIndicator: UIActivityIndicatorView = {
        let activityIndicator = UIActivityIndicatorView()
         activityIndicator.hidesWhenStopped = true
@@ -20,12 +18,10 @@ class DetailMovieViewController: UIViewController {
         return activityIndicator
     }()
     
-    
     private let  scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.alwaysBounceVertical = true
-        
         
         return scrollView
     }()
@@ -45,7 +41,6 @@ class DetailMovieViewController: UIViewController {
         image.image = UIImage(named: "TestImage1")
         image.contentMode = .scaleAspectFill
         image.translatesAutoresizingMaskIntoConstraints = false
-        
         
         return image
     }()
@@ -99,8 +94,6 @@ class DetailMovieViewController: UIViewController {
         return label
     }()
     
-    
-    
     private let descriptionTextView: UITextView = {
         let textView = UITextView()
         textView.textColor = .label
@@ -112,11 +105,7 @@ class DetailMovieViewController: UIViewController {
         return textView
     }()
     
-    
     var presenter: DetailMoviePresenter!
-    
-  
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -136,9 +125,7 @@ class DetailMovieViewController: UIViewController {
         trailerImageButton.addTarget(self, action: #selector(pressOnTrailer), for: .touchUpInside)
         ratingStackView.addArrangedSubview(ratingLabel)
         
-        
         stackView.addArrangedSubview(descriptionTextView)
-        
         
         setupConstraints()
         
@@ -151,8 +138,10 @@ class DetailMovieViewController: UIViewController {
         
     }
     
-    @objc func imageTapped(tapGestureRecognizer: UITapGestureRecognizer){
-        let tappedImage = tapGestureRecognizer.view as! UIImageView
+    @objc func imageTapped(tapGestureRecognizer: UITapGestureRecognizer) {
+        guard let tappedImage = tapGestureRecognizer.view as? UIImageView else {
+            return
+        }
 
         presenter.openPhoto(image: tappedImage.image)
     }
@@ -165,7 +154,6 @@ class DetailMovieViewController: UIViewController {
             UIApplication.shared.open(url)
         }
     }
-    
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
@@ -190,7 +178,6 @@ class DetailMovieViewController: UIViewController {
     
 }
 
-
 extension DetailMovieViewController: DetailMovieViewProtocol {
     func updateMovie(movie: MovieDetail) {
         navigationItem.title = movie.title
@@ -201,7 +188,6 @@ extension DetailMovieViewController: DetailMovieViewProtocol {
             imageView.image = UIImage(systemName: "photo.fill")
         }
     
-        
         titleLabel.text = movie.title
         
         let counties = movie.productionCountries.compactMap({$0.name}).joined(separator: ", ")
@@ -231,6 +217,5 @@ extension DetailMovieViewController: DetailMovieViewProtocol {
             scrollView.isHidden = false
         }
     }
-    
     
 }

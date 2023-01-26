@@ -8,7 +8,6 @@
 import Foundation
 import Alamofire
 
-
 struct Constant {
     static let baseAPIURL = "https://api.themoviedb.org/3"
     static let baseMediaUrl = "https://image.tmdb.org/t/p/w500"
@@ -22,14 +21,13 @@ protocol NetworkServiceProtocol: AnyObject {
     func getMovieDetail(movieId: Int, completion: @escaping(Result<MovieDetail, AFError>) -> Void)
 }
 
-
 class NetworkService: NetworkServiceProtocol {
     
-    let apiToken = "" // Set here your token
+    let apiToken = "0a3f77752ec54fe55f4ca58bfaf36985" // Set here your token
     
     func getGenres(completion: @escaping(Result<Genres, AFError>) -> Void) {
         let parameters = [
-            "api_key": "0a3f77752ec54fe55f4ca58bfaf36985",
+            "api_key": "\(apiToken)",
             "language": "en-US"
         ]
         
@@ -56,7 +54,6 @@ class NetworkService: NetworkServiceProtocol {
                 completion(response.result)
             }
     }
-    
     
     func getSearchedMovies(page: Int, query: String, completion: @escaping(Result<MoviesList, AFError>) -> Void) {
         let parameters = [
